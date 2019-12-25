@@ -81,6 +81,9 @@ year = time.strftime("%Y")
 author = u'tue-robotics'
 copyright = u'{}, {}'.format(year, author)
 
+# Dynamic project title
+rst_epilog = '.. |project| replace:: {}'.format(project)
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
