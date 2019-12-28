@@ -20,7 +20,14 @@ import time
 import autoapi
 
 import catkin_pkg.package
-catkin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Get the main folder of the package, as the location of this configuration is not fixed
+catkin_dir = os.path.dirname(os.path.abspath(__file__))
+i = 0
+while not os.path.isfile(os.path.join(catkin_dir, catkin_pkg.package.PACKAGE_MANIFEST_FILENAME)) and i < 4:
+    catkin_dir = os.path.dirname(catkin_dir)
+    i += 1
+
 catkin_package = catkin_pkg.package.parse_package(os.path.join(catkin_dir, catkin_pkg.package.PACKAGE_MANIFEST_FILENAME))
 
 # If extensions (or modules to document with autodoc) are in another directory,
