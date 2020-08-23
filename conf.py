@@ -18,6 +18,9 @@ import sys
 import time
 
 import autoapi
+if not hasattr(autoapi, "__version__"):
+    autoapi.__version_info__ = (1, 3, 0)
+    autoapi.__version__ = ".".join(str(x) for x in autoapi.__version_info__)
 
 import catkin_pkg.package
 
@@ -77,10 +80,14 @@ autoapi_dirs = [os.path.abspath(os.path.join(catkin_dir, 'src'))]
 autoapi_keep_files = True
 autoapi_root = 'api'
 autoapi_add_toctree_entry = True
-autoapi_include_summaries = True
 autoapi_python_class_content = 'both'
 
 autoapi_options = ['members', 'undoc-members', 'private-members', 'special-members']
+
+if autoapi.__version_info__ >= (1, 4, 0):
+    autoapi_options.append("show-module-summary")
+else:
+    autoapi_include_summaries = True
 
 # General information about the project.
 project = unicode(catkin_package.name)
