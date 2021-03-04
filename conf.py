@@ -82,7 +82,7 @@ autoapi_root = 'api'
 autoapi_add_toctree_entry = True
 autoapi_python_class_content = 'both'
 
-autoapi_options = ['members', 'undoc-members', 'private-members', 'special-members']
+autoapi_options = ['members', 'undoc-members', 'private-members', 'special-members', 'show-inheritance']
 
 if autoapi.__version_info__ >= (1, 4, 0):
     autoapi_options.append("show-module-summary")
