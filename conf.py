@@ -90,10 +90,10 @@ else:
     autoapi_include_summaries = True
 
 # General information about the project.
-project = unicode(catkin_package.name)
+project = str(catkin_package.name)
 year = time.strftime("%Y")
-author = u'tue-robotics'
-copyright = u'{}, {}'.format(year, author)
+author = 'tue-robotics'
+copyright = '{}, {}'.format(year, author)
 
 # Dynamic project title
 rst_epilog = '.. |project| replace:: {}'.format(project)
@@ -275,7 +275,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, catkin_package.name + '.tex', u'{} Documentation'.format(catkin_package.name.replace('_', '\\_')),
+    (master_doc, catkin_package.name + '.tex', '{} Documentation'.format(catkin_package.name.replace('_', '\\_')),
      author, 'manual'),
 ]
 
@@ -305,7 +305,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, catkin_package.name, u'{} Documentation'.format(catkin_package.name),
+    (master_doc, catkin_package.name, '{} Documentation'.format(catkin_package.name),
      [author], 1)
 ]
 
@@ -319,7 +319,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, catkin_package.name, u'{} Documentation'.format(catkin_package.name),
+    (master_doc, catkin_package.name, '{} Documentation'.format(catkin_package.name),
      author, catkin_package.name, 'One line description of project.',
      'Miscellaneous'),
 ]
