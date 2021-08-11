@@ -14,7 +14,6 @@
 
 import os
 import six
-import sys
 import time
 
 import autoapi
@@ -47,6 +46,7 @@ catkin_package = catkin_pkg.package.parse_package(os.path.join(catkin_dir, catki
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
     'autoapi.extension',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -74,6 +74,11 @@ source_suffix = '.rst'
 # The master toctree document.
 master_doc = 'index'
 
+# autodoc.typehints
+autodoc_typehints = 'description'
+autodoc_typehints_description_target = 'all'
+
+# autoapi
 autoapi_type = 'python'
 autoapi_dirs = [os.path.abspath(os.path.join(catkin_dir, 'src'))]
 
