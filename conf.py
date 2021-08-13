@@ -14,6 +14,7 @@
 
 import os
 import six
+import sys
 import time
 
 import autoapi
@@ -346,7 +347,8 @@ texinfo_documents = [
 intersphinx_mapping = {
     'sphinx': ('http://www.sphinx-doc.org/en/master/', None),
 }
-if six.PY3:
-    intersphinx_mapping['python'] = ('https://docs.python.org/3.7/', None)
+if not six.PY2:
+    python_version = '{}.{}'.format(sys.version_info.major, sys.version_info.minor)
+    intersphinx_mapping['python'] = ('https://docs.python.org/{}/'.format(python_version), None)
 else:
     intersphinx_mapping['python'] = ('https://docs.python.org/2.7/', None)
