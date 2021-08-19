@@ -16,11 +16,14 @@ import os
 import six
 import sys
 import time
+import yaml
 
 import autoapi
 if not hasattr(autoapi, "__version__"):
     autoapi.__version_info__ = (1, 3, 0)
     autoapi.__version__ = ".".join(str(x) for x in autoapi.__version_info__)
+
+import rospkg
 
 import catkin_pkg.package
 
@@ -32,6 +35,11 @@ while not os.path.isfile(os.path.join(catkin_dir, catkin_pkg.package.PACKAGE_MAN
     i += 1
 
 catkin_package = catkin_pkg.package.parse_package(os.path.join(catkin_dir, catkin_pkg.package.PACKAGE_MANIFEST_FILENAME))
+
+rospack = rospkg.RosPack()
+
+src_dir = os.path.dirname(catkin_dir)
+workspace_dir = os.path.dirname(src_dir)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -345,10 +353,63 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'sphinx': ('http://www.sphinx-doc.org/en/master/', None),
+    'catkin_pkg': ('https://docs.ros.org/independent/api/catkin_pkg/html', None),
+    'jenkins_tools': ('https://docs.ros.org/independent/api/jenkins_tools/html', None),
+    'rosdep': ('https://docs.ros.org/independent/api/rosdep/html', None),
+    'rosdistro': ('https://docs.ros.org/independent/api/rosdistro/html', None),
+    'rosinstall': ('https://docs.ros.org/independent/api/rosinstall/html', None),
+    'rospkg': ('https://docs.ros.org/independent/api/rospkg/html', None),
+    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+    'vcstools': ('https://docs.ros.org/independent/api/vcstools/html', None),
 }
 if not six.PY2:
     python_version = '{}.{}'.format(sys.version_info.major, sys.version_info.minor)
     intersphinx_mapping['python'] = ('https://docs.python.org/{}/'.format(python_version), None)
 else:
     intersphinx_mapping['python'] = ('https://docs.python.org/2.7/', None)
+
+docs_dir = os.path.join(workspace_dir, 'docs')
+pkg_docs_dir = os.path.join(docs_dir, catkin_package.name)
+
+if os.path.isfile(os.path.join(docs_dir, 'objects.inv')):
+    intersphinx_mapping['workspace'] = (os.path.relpath(docs_dir, pkg_docs_dir), None)
+
+
+def get_rosdoc_config_from_manifest(m):
+    pkg_path = os.path.dirname(m.filename)
+    rosdoc_configs = m.get_export('rosdoc', 'config')
+    for config in rosdoc_configs:
+        config_path = os.path.join(pkg_path, config)
+        if os.path.exists(config_path):
+            return config_path
+
+    return ''
+
+
+def read_sphinx_output_dir_from_yaml(yaml_file):
+    with open(yaml_file, 'r') as f:
+        contents = yaml.full_load(f)
+
+    assert isinstance(contents, list), 'rosdoc config should be a list'
+    for builder in contents:
+        if builder['builder'].lower() != 'sphinx':
+            continue
+        return builder.get('output_dir', '')
+
+
+dep_types = ['build_depends', 'build_export_depends', 'exec_depends']
+
+workspace_pkgs = rospkg.list_by_path(catkin_pkg.package.PACKAGE_MANIFEST_FILENAME, workspace_dir, {}) #rospack._location_cache)
+
+for dep_type in dep_types:
+    for pkg in getattr(catkin_package, dep_type):
+        pkg_name = pkg.name
+        if pkg_name in workspace_pkgs:
+            m = rospack.get_manifest(pkg_name)
+            rosdoc_config = get_rosdoc_config_from_manifest(m)
+            output_dir = '' if not rosdoc_config else read_sphinx_output_dir_from_yaml(rosdoc_config)
+            objects_inv_dir = os.path.join(docs_dir, pkg_name, 'html', output_dir)
+            if os.path.isfile(os.path.join(objects_inv_dir, 'objects.inv')):
+                intersphinx_mapping[pkg_name] = (os.path.relpath(objects_inv_dir, pkg_docs_dir), None)
+
+print(intersphinx_mapping)
