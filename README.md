@@ -7,5 +7,8 @@ This Sphinx configuration is fully dynamic configured for any catkin package wit
 <doc_depend condition="$ROS_PYTHON_VERSION == 3">python3-sphinx</doc_depend>
 <doc_depend>python-sphinx-autoapi-pip</doc_depend>
 <doc_depend>python-sphinx-rtd-theme-pip</doc_depend>
+<doc_depend condition="$ROS_PYTHON_VERSION == 2">python-yaml</doc_depend>
+<doc_depend condition="$ROS_PYTHON_VERSION == 3">python3-yaml</doc_depend>
 ```
+
 **_Note_: This requires package format 2 or 3**
